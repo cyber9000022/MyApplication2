@@ -2,7 +2,6 @@ package ex.kyj.myapplication;
 
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
@@ -24,7 +23,7 @@ public class MusicItemView extends LinearLayout {
         init(context);
     }
 
-    public MusicItemView(Context context, @Nullable AttributeSet attrs) {
+    public MusicItemView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }

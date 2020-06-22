@@ -1,55 +1,62 @@
 package ex.kyj.myapplication;
 import android.annotation.SuppressLint;
-import android.os.Bundle;
-
-import android.os.AsyncTask;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-
-import java.io.*;
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.AdapterView;
-import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.BaseAdapter;
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
-import android.widget.AdapterView.OnItemClickListener;
-import android.view.View.OnClickListener;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
-import android.content.res.AssetManager;
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
-
-import android.text.Spanned;
-import android.text.InputFilter;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 public class MainActivity extends YouTubeBaseActivity {
 
     YouTubePlayerView youTubeView;
     YouTubePlayer player;
     String item;
-    Button button;
+    String emotion;
+    Button button,eraseButton,renewalButton;
     ListView list;
-    EditText text;
+    TextView textView;
+   private EditText text;
 
     MusicAdapter adapter;
     MusicItemView view;
@@ -58,16 +65,23 @@ public class MainActivity extends YouTubeBaseActivity {
     public static final String DATABASE_NAME = "music.db";
     private static final String TABLE_NAME = "music_av";
 
-    @Override
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         text = (EditText) findViewById(R.id.text);
-        button = (Button) findViewById(R.id.button1);
+        button = (Button) findViewById(R.id.button);
+        eraseButton = (Button) findViewById(R.id.Erasebutton);
+        renewalButton = (Button) findViewById(R.id.renewalbutton);
         list = (ListView) findViewById(R.id.listView);
         list.setOnItemClickListener(itemClickListenerOfList);
         button.setOnClickListener(buttonClickListenerOfConfirm);
+        eraseButton.setOnClickListener(buttonClickListenerOfErase);
+        renewalButton.setOnClickListener(buttonClickListenerOfRenewal);
         text.setFilters(new InputFilter[] {filterKoreanAlpahDigit});
+        text.setFilters(new InputFilter[] {new InputFilter.LengthFilter(500)});
+        textView =(TextView) findViewById(R.id.textView);
+
         try {
             boolean bResult = isCheckDB(getApplicationContext());
             // DB 확인
@@ -79,7 +93,29 @@ public class MainActivity extends YouTubeBaseActivity {
             e.printStackTrace();
         }
         initVideo();
+        text.addTextChangedListener(watcher);
     }
+
+    TextWatcher watcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            String input = text.getText().toString();
+            textView.setText(String.format("%d/500자", input.length()));
+            if(input.length()>=500){
+                Toast.makeText(getApplicationContext(),"500자 까지만 입력이 가능합니다.",Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
     //DB 확인
     public boolean isCheckDB(Context mContext) {
         String filePath = "/data/data/" + PACKAGE_DIR + "/databases/" + DATABASE_NAME;
@@ -218,7 +254,6 @@ public class MainActivity extends YouTubeBaseActivity {
         }
         return null;
     }
-
     protected void showList(String emotion) {
 
         try {
@@ -235,8 +270,8 @@ public class MainActivity extends YouTubeBaseActivity {
                         String name = c.getString(c.getColumnIndex("songname"));
                         String singer = c.getString(c.getColumnIndex("singer"));
                         String id = c.getString(c.getColumnIndex("id"));
-                        //5곡을  뽑는다.
-                        if (count < 5) {
+                        //8곡을  뽑는다.
+                        if (count < 8) {
                             adapter.addItem(new Music(name,singer,id));
                             //personList.add(persons);
                             count++;
@@ -252,7 +287,7 @@ public class MainActivity extends YouTubeBaseActivity {
             e.printStackTrace();
         }
     }
-    //버튼 클릭시 리스너
+    //버튼 클릭시 리스트 출력
     private OnClickListener buttonClickListenerOfConfirm = new OnClickListener() {
         public void onClick(View v) {
 
@@ -263,9 +298,22 @@ public class MainActivity extends YouTubeBaseActivity {
             } else {
                 list = (ListView) findViewById(R.id.listView);
                 //음악 리스트를 보여줌
-                showList(getResponse(s));
+                emotion=getResponse(s);
+                showList(emotion);
 
             }
+        }
+    };
+    //버튼 클릭시 텍스트 null로 만듬
+    private OnClickListener buttonClickListenerOfErase = new OnClickListener() {
+        public void onClick(View v) {
+            text.setText(null);
+        }
+    };
+    //버튼 클릭시 곡 갱신
+    private OnClickListener buttonClickListenerOfRenewal = new OnClickListener() {
+        public void onClick(View v) {
+            showList(emotion);
         }
     };
     //특수문자 및 이모티콘 입력 필터
