@@ -7,10 +7,6 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-/**
- * Created by kang on 2017-08-23.
- */
-
 public class MusicItemView extends LinearLayout {
 
     TextView textView;
@@ -42,15 +38,15 @@ public class MusicItemView extends LinearLayout {
         textView2 = (TextView) findViewById(R.id.listtext2);
     }
 
-    //MainActivity getView() 에서 setName 이 호출되면 값을 textView 에 넣어준다.
+    //getView() 에서 setName 이 호출되면 값을 textView 에 넣어준다.
     public void setName(String name) {
 
         textView.setText(name);
     }
 
-    public void setSinger(String mobile) {
+    public void setSinger(String singer) {
 
-        textView2.setText(mobile);
+        textView2.setText(singer);
     }
 
 }

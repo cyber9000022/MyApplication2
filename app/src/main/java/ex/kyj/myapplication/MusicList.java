@@ -45,9 +45,9 @@ public class MusicList {
         try {
             AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>() {
                 protected String doInBackground(String... url) {
-                    BufferedReader br = null;
+                    BufferedReader br;
                     String emotion = null;
-                    String JsonData = "";
+                    String JsonData;
                     try {
                         //API에 GET메소드를 통해 JSON 형태로 받는다.
                         String text = URLEncoder.encode(inputtext, "utf-8");

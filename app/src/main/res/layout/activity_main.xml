@@ -17,11 +17,11 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginTop="0dp"
-        android:hint="감정을 글로 표현하시고 검색 버튼을 눌러주세요(한글,영어,숫자만 입력)"
         android:maxHeight="200dp"
         android:maxLength="500"
         android:scrollbars="vertical"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:hint="감정을 글로 표현하시고 검색 버튼을 눌러주세요(한글,영어,숫자만 입력)"/>
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"

@@ -1,5 +1,7 @@
 package ex.kyj.myapplication;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -103,11 +105,15 @@ public class MainActivity extends YouTubeBaseActivity {
                 Toast.makeText(getApplicationContext(),"다시 입력해 주세요",Toast.LENGTH_LONG).show();
             } else {
                 list = (ListView) findViewById(R.id.listView);
-                //음악 리스트를 보여줌
                 musicList = new MusicList(getApplicationContext(),adapter,list);
-                musicList.setEmotion(MusicList.getResponse(s));
-                musicList.showList(musicList.getEmotion());
-
+                //인터넷 확인
+                if(getConnectivityStatus()== true) {
+                    //음악 리스트를 보여줌
+                    musicList.setEmotion(MusicList.getResponse(s));
+                    musicList.showList(musicList.getEmotion());
+                } else {
+                    Toast.makeText(getApplicationContext(),"인터넷을 연결하고 검색해주세요",Toast.LENGTH_SHORT).show();
+                }
             }
         }
     };
@@ -120,9 +126,9 @@ public class MainActivity extends YouTubeBaseActivity {
     //버튼 클릭시 곡 갱신
     private OnClickListener buttonClickListenerOfRenewal = new OnClickListener() {
         public void onClick(View v) {
-
-            if(musicList.getEmotion()==null){
-                Toast.makeText(getApplicationContext(),"클릭을 먼저 해주세요",Toast.LENGTH_SHORT).show();
+            //검색을 하지 않곡 갱신을 했는지 확인
+            if(musicList == null  ||musicList.getEmotion() == null ){
+                Toast.makeText(getApplicationContext(),"검색을 먼저 해주세요",Toast.LENGTH_SHORT).show();
             }else {
                 musicList.showList(musicList.getEmotion());
             }
@@ -142,7 +148,16 @@ public class MainActivity extends YouTubeBaseActivity {
         }
     };
 
+    public boolean getConnectivityStatus(){
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        if(networkInfo != null){
+            return  true;
+        } else{
+            return  false;
+        }
+    }
 
 }
 
