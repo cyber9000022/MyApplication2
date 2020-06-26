@@ -1,5 +1,6 @@
 package ex.kyj.myapplication;
 
+import android.content.pm.ActivityInfo;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -33,21 +34,20 @@ public class MainActivity extends YouTubeBaseActivity {
     MusicItemView view;
     Youtube youtube;
     ConfirmDB confirmDB;
-    public static final String DATABASE_NAME = "music.db";
-    private static final String TABLE_NAME = "music_av";
     YouTubePlayerView youTubeView;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//세로화면 고정
         setContentView(R.layout.activity_main);
 
-        text = (EditText) findViewById(R.id.text);
-        button = (Button) findViewById(R.id.button);
-        eraseButton = (Button) findViewById(R.id.Erasebutton);
-        renewalButton = (Button) findViewById(R.id.renewalbutton);
-        youTubeView = (YouTubePlayerView) findViewById(R.id.youtubeView);
-        list = (ListView) findViewById(R.id.listView);
-        textView =(TextView) findViewById(R.id.textView);
+        text =  findViewById(R.id.text);
+        button =  findViewById(R.id.button);
+        eraseButton =  findViewById(R.id.Erasebutton);
+        renewalButton =  findViewById(R.id.renewalbutton);
+        youTubeView =  findViewById(R.id.youtubeView);
+        list =  findViewById(R.id.listView);
+        textView = findViewById(R.id.textView);
 
         list.setOnItemClickListener(itemClickListenerOfList);
         button.setOnClickListener(buttonClickListenerOfConfirm);
@@ -74,7 +74,8 @@ public class MainActivity extends YouTubeBaseActivity {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             String input = text.getText().toString();
-            textView.setText(String.format("%d/500자", input.length()));
+            String showtextnum= input.length()+"/500자";
+            textView.setText(showtextnum);
             if(input.length()>=500){
                 Toast.makeText(getApplicationContext(),"500자 까지만 입력이 가능합니다.",Toast.LENGTH_SHORT).show();
             }
@@ -104,11 +105,11 @@ public class MainActivity extends YouTubeBaseActivity {
             if(s.getBytes().length<=0){
                 Toast.makeText(getApplicationContext(),"다시 입력해 주세요",Toast.LENGTH_LONG).show();
             } else {
-                list = (ListView) findViewById(R.id.listView);
+                list = findViewById(R.id.listView);
                 musicList = new MusicList(getApplicationContext(),adapter,list);
-                //인터넷 확인
-                if(getConnectivityStatus()== true) {
-                    //음악 리스트를 보여줌
+                /* 인터넷 확인 */
+                if(getConnectivityStatus()) {
+                    /* 음악 리스트를 보여줌 */
                     musicList.setEmotion(MusicList.getResponse(s));
                     musicList.showList(musicList.getEmotion());
                 } else {
@@ -151,12 +152,9 @@ public class MainActivity extends YouTubeBaseActivity {
     public boolean getConnectivityStatus(){
         ConnectivityManager manager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 
+        assert manager != null;
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-        if(networkInfo != null){
-            return  true;
-        } else{
-            return  false;
-        }
+        return networkInfo != null;
     }
 
 }

@@ -31,11 +31,12 @@ public class MusicItemView extends LinearLayout {
 
         //단말이 시작될때 리스트 아이템 디자인을 정의한 singer_item.xml 이
         // activity_main.xml에 정의한 리니어 레이아웃에 달라 붙는다.
+        assert inflater != null;
         inflater.inflate(R.layout.list_item, this, true);
 
         //singer_item 에 정의한 것들 선택자 가져오기
-        textView = (TextView) findViewById(R.id.listtext1);
-        textView2 = (TextView) findViewById(R.id.listtext2);
+        textView =findViewById(R.id.listtext1);
+        textView2 =findViewById(R.id.listtext2);
     }
 
     //getView() 에서 setName 이 호출되면 값을 textView 에 넣어준다.

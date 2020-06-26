@@ -18,29 +18,29 @@ import java.net.URLEncoder;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class MusicList {
-    MusicAdapter adapter;
-    Context ctx;
+class MusicList {
+    private MusicAdapter adapter;
+    private Context ctx;
     ListView list;
-    String emotion =null;
-    public static final String DATABASE_NAME = "music.db";
+    private String emotion =null;
+    private static final String DATABASE_NAME = "music.db";
     private static final String TABLE_NAME = "music_av";
 
-    public MusicList(Context ctx, MusicAdapter adapter , ListView list){
+    MusicList(Context ctx, MusicAdapter adapter, ListView list){
         this.ctx = ctx;
         this.adapter = adapter;
         this.list = list;
     }
 
-    public void setEmotion(String emotion) {
+    void setEmotion(String emotion) {
         this.emotion = emotion;
     }
 
-    public String getEmotion() {
+    String getEmotion() {
         return emotion;
     }
 
-    public static String getResponse(final String inputtext) {
+    static String getResponse(final String inputtext) {
         String answer;
         try {
             AsyncTask<String, Void, String> asyncTask = new AsyncTask<String, Void, String>() {
@@ -82,7 +82,7 @@ public class MusicList {
         return null;
     }
     //api에서 받은 감정을 통해 arousal valence 범위를 나눈다.
-    public String getPlain(String emotion) {
+    private String getPlain(String emotion) {
         switch (emotion) {
             case "슬픔":
                 return "arousal <=5 AND valence <=5";
@@ -104,7 +104,7 @@ public class MusicList {
         return null;
     }
 
-    public void showList(String emotion) {
+     void showList(String emotion) {
 
         try {
 

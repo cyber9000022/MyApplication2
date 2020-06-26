@@ -1,23 +1,23 @@
 package ex.kyj.myapplication;
 
-public class Music {
-    String songname;
-    String songid;
-    String singer;
+class Music {
+    private String songname;
+    private String songid;
+    private String singer;
 
-    public Music(String songname,String singer,String songid){
+    Music(String songname,String singer,String songid){
         this.songname=songname;
         this.songid=songid;
         this.singer=singer;
     }
 
-    public String getSongid() {
+    String getSongid() {
         return songid;
     }
-    public String getSongname() {
+    String getSongname() {
         return songname;
     }
-    public String getSinger() {
+    String getSinger() {
         return singer;
     }
     public void setSongid(String songid) {

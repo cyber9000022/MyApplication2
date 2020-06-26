@@ -2,7 +2,6 @@ package ex.kyj.myapplication;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,12 @@ import java.util.ArrayList;
 
 class MusicAdapter extends BaseAdapter {
     //데이터 담을 수 있는 공간 설정
-    Context ctx;
+    private Context ctx;
     ListView list;
 
 
-    ArrayList<Music> items = new ArrayList<Music>();
-    public MusicAdapter(Context ctx, ListView list){
+    ArrayList<Music> items = new ArrayList<>();
+    MusicAdapter(Context ctx, ListView list){
         this.ctx = ctx;
         this.list = list;
 
@@ -41,27 +40,18 @@ class MusicAdapter extends BaseAdapter {
     public long getItemId(int position) {
         return position;
     }
-    //중요 !! 어뎁터가 뷰를 만들어줌 (부분화면 정의한거 리턴)
-    @SuppressLint("InflateParams")
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        //뷰를 만들어 줄때 재사용할 수 있게
-        //화면에 안보여 지게되는것은 다시 재사용하게 되면서 new로 만들필요 없다.
-        // 코드 재사용 convertView 사용
-        MusicItemView view = new MusicItemView(ctx);
-        View v = convertView;
-        if (v == null) {
-            LayoutInflater vi = (LayoutInflater)ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi != null ? vi.inflate(R.layout.list_item, null) : null;
-        }
-        //convertView 가 null 이면
+        final MusicItemView view = new MusicItemView(ctx);
+
 
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                for(int i =0;i<list.getChildCount();i++){
+                for(int i =0;i<list.getChildCount();i++) {
                     list.getChildAt(i).setBackgroundColor(0xFFFFFFFF);
                 }
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
@@ -78,4 +68,5 @@ class MusicAdapter extends BaseAdapter {
         view.setSinger(item.getSinger());
         return view;
     }
+
 }

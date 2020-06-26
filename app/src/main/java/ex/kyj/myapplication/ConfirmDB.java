@@ -14,17 +14,20 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ConfirmDB extends SQLiteOpenHelper {
-    Context ctx ;
-    public static final String PACKAGE_DIR = "ex.kyj.myapplication";
-    public static final String DATABASE_NAME = "music.db";
-    public ConfirmDB (Context ctx){
+    private Context ctx ;
+    private String PACKAGE_DIR;
+
+    private static final String DATABASE_NAME = "music.db";
+
+    ConfirmDB(Context ctx){
         super(ctx,DATABASE_NAME,null,1);
         this.ctx = ctx;
+        PACKAGE_DIR = ctx.getFilesDir().getPath();
     }
 
-    public void init(){
+    void init(){
         try {
-            boolean bResult = isCheckDB(ctx);
+            boolean bResult = isCheckDB();
             // DB 확인
             Log.d("MiniApp", "1");
             if (!bResult) {
@@ -36,8 +39,9 @@ public class ConfirmDB extends SQLiteOpenHelper {
             e.printStackTrace();
         }
     }
-    public boolean isCheckDB(Context mContext) {
-        String filePath = "/data/data/" + PACKAGE_DIR + "/databases/" + DATABASE_NAME;
+    private boolean isCheckDB() {
+
+        String filePath = PACKAGE_DIR + "/databases/" + DATABASE_NAME;
         File file = new File(filePath);
         if (file.exists()) {
             Log.d("MiniApp", "1");
@@ -47,14 +51,14 @@ public class ConfirmDB extends SQLiteOpenHelper {
         return false;
     }
     //Asset에서 db파일을 가져와 databases 밑에 db 복사
-    public void copyDB(Context mContext) {
+    private void copyDB(Context mContext) {
         AssetManager manager = mContext.getAssets();
-        String folderPath = "/data/data/" + PACKAGE_DIR + "/databases";
-        String filePath = "/data/data/" + PACKAGE_DIR + "/databases/" + DATABASE_NAME;
+        String folderPath = PACKAGE_DIR + "/databases";
+        String filePath = PACKAGE_DIR + "/databases/" + DATABASE_NAME;
         File folder = new File(folderPath);
         File file = new File(filePath);
-        FileOutputStream fos = null;
-        BufferedOutputStream bos = null;
+        FileOutputStream fos;
+        BufferedOutputStream bos;
         try {
             InputStream is = manager.open("db/" + DATABASE_NAME);
             BufferedInputStream bis = new BufferedInputStream(is);
@@ -67,7 +71,7 @@ public class ConfirmDB extends SQLiteOpenHelper {
             }
             fos = new FileOutputStream(file);
             bos = new BufferedOutputStream(fos);
-            int read = -1;
+            int read;
             byte[] buffer = new byte[1024];
             while ((read = bis.read(buffer, 0, 1024)) != -1) {
                 bos.write(buffer, 0, read);

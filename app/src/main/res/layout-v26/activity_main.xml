@@ -21,10 +21,7 @@
         android:maxLength="500"
         android:scrollbars="vertical"
         android:textAlignment="center"
-        android:hint="@string/hint"
-        android:inputType="text"
-        android:importantForAutofill="no"
-        tools:ignore="UnusedAttribute" />
+        android:autofillHints="@string/hint" />
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
@@ -69,6 +66,7 @@
     <view
         android:id="@+id/youtubeView"
         class="com.google.android.youtube.player.YouTubePlayerView"
+        id="@+id/view2"
         android:layout_width="345dp"
         android:layout_height="215dp"
         android:layout_below="@+id/button"
