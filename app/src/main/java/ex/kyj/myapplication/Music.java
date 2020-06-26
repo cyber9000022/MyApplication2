@@ -24,10 +24,4 @@ class Music {
         this.songid = songid;
     }
 
-    public void setSongname(String songname) {
-        this.songname = songname;
-    }
-    public void setSinger(String singer) {
-        this.singer = singer;
-    }
 }
