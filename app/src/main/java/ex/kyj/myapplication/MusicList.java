@@ -84,22 +84,22 @@ class MusicList {
     //api에서 받은 감정을 통해 arousal valence 범위를 나눈다.
     private String getPlain(String emotion) {
         switch (emotion) {
-            case "슬픔":
-                return "arousal <=5 AND valence <=5";
-            case "공포":
-                return "arousal <=5 AND valence <=5";
             case "신뢰":
-                return "arousal >=5 AND valence >=5";
+                return "arousal <=5 AND valence >=5";
             case "기대":
-                return "arousal >=5 AND valence >=5";
+                return "arousal <=5 AND valence >=5";
             case "혐오":
+                return "(arousal>=valence) AND arousal >=5";
+            case "공포":
                 return "arousal >=5 AND valence <=5";
             case "분노":
                 return "arousal >=5 AND valence <=5";
+            case "슬픔":
+                return "arousal <=5 AND valence <=5";
             case "기쁨":
                 return "arousal >=5 AND valence >=5";
             case "놀라움":
-                return "arousal >=5 AND valence >=5";
+                return "(arousal>=-valence+10 AND valence >=5) AND (arousal>=valence AND valence >=5)";
         }
         return null;
     }
