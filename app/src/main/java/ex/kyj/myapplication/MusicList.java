@@ -84,22 +84,22 @@ class MusicList {
     //api에서 받은 감정을 통해 arousal valence 범위를 나눈다.
     private String getPlain(String emotion) {
         switch (emotion) {
-            case "신뢰":
+            case "신뢰": //4사분면
                 return "arousal <=5 AND valence >=5";
-            case "기대":
-                return "arousal <=5 AND valence >=5";
-            case "혐오":
-                return "(arousal>=valence) AND arousal >=5";
-            case "공포":
+            case "혐오": //2사분면
                 return "arousal >=5 AND valence <=5";
-            case "분노":
+            case "공포": //2사분면
                 return "arousal >=5 AND valence <=5";
-            case "슬픔":
+            case "분노": //2사분면
+                return "arousal >=5 AND valence <=5";
+            case "슬픔": //3사분면
                 return "arousal <=5 AND valence <=5";
-            case "기쁨":
+            case "기쁨": //1사분면
                 return "arousal >=5 AND valence >=5";
-            case "놀라움":
-                return "(arousal>=-valence+10 AND valence >=5) AND (arousal>=valence AND valence >=5)";
+            case "기대": //1사분면
+                return "arousal >=5 AND valence >=5";
+            case "놀라움": //1사분면과 2사분면 상단
+                return "(arousal>=-valence+10) AND (arousal>=valence)";
         }
         return null;
     }
@@ -127,7 +127,7 @@ class MusicList {
                             //personList.add(persons);
                             count++;
                         }
-                    } while (c.moveToNext());
+                    } while (c.moveToNext() || count<8);
                 }
                 c.close();
             }
